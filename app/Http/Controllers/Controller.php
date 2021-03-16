@@ -43,7 +43,7 @@ class Controller extends BaseController
 
             $telegram->sendToTelegram($validated, $id, $files);
         } catch (\Throwable $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), $e->getTrace());
             return response(['success' => false]);
         }
 

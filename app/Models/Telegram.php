@@ -73,11 +73,11 @@ class Telegram
 *Сообщение:* %s
 *Файл:* %s
 ",
-            $validated['name'] ? trim($validated['name']) : 'Не задано',
-            $validated['email'] ? trim($validated['email']) : 'Не задано',
-            $validated['phone'] ? trim($validated['phone']) : 'Не задано',
-            $validated['city'] ? trim($validated['city']) : 'Не задано',
-            $validated['message'] ? trim($validated['message']) : 'Не задано',
+            $validated['name'] ?? 'Не задано',
+            $validated['email'] ?? 'Не задано',
+            $validated['phone'] ?? 'Не задано',
+            $validated['city'] ?? 'Не задано',
+            $validated['message'] ?? 'Не задано',
             !empty($files) ? 'Прикреплены ниже' : 'Не задано',
         );
     }
