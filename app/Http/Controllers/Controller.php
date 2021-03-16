@@ -29,6 +29,7 @@ class Controller extends BaseController
             'phone' => 'string|max:255',
             'city' => 'string|max:255',
             'message' => 'string|max:60000',
+            'files' => 'array',
             'files.*' => 'file|max:5000'
         ]);
 
