@@ -23,16 +23,16 @@ class Controller extends BaseController
      */
     public function form(Request $request, Telegram $telegram)
     {
-        try {
-            $validated = $this->validate($request, [
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|max:255',
-                'phone' => 'string|max:255',
-                'city' => 'string|max:255',
-                'message' => 'string|max:60000',
-                'files.*' => 'file|max:5000'
-            ]);
+        $validated = $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'phone' => 'string|max:255',
+            'city' => 'string|max:255',
+            'message' => 'string|max:60000',
+            'files.*' => 'file|max:5000'
+        ]);
 
+        try {
             $files = !empty($validated['files'])
                 ? $telegram->prepareRequestWithFiles($validated)
                 : null;
