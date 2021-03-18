@@ -42,7 +42,7 @@ class Controller extends BaseController
 
             $id = DB::table('form_data')->insertGetId($validated);
 
-            $telegram->sendToTelegram($validated, $id, $files);
+            $telegram->sendToTelegram($validated, $id, $files ?? null);
         } catch (\Throwable $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return response(['success' => false]);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use TelegramBot\Api\BotApi;
 use CURLFile;
 use TelegramBot\Api\Exception;
@@ -22,9 +23,9 @@ class Telegram
     private string $botToken;
 
     /**
-     * @var int
+     * @var array
      */
-    private int $botId;
+    private array $chatIds;
 
     /**
      * Telegram constructor.
@@ -32,7 +33,7 @@ class Telegram
     public function __construct()
     {
         $this->botToken = config('telegram.telegram-bot-api.token');
-        $this->botId = config('telegram.telegram-bot-api.id');
+        $this->chatIds = explode(',', config('telegram.telegram-bot-api.id'));
     }
 
     /**
@@ -44,15 +45,23 @@ class Telegram
      */
     public function sendToTelegram(array $validated, int $id, ?array $files): void
     {
-        (new BotApi($this->botToken))->sendMessage(
-            $this->botId,
-            $this->getMessage($validated, $id),
-            self::MARKDOWN
-        );
+        foreach ($this->chatIds as $chatId) {
+            try {
+                (new BotApi($this->botToken))->sendMessage(
+                    $chatId,
+                    $this->getMessage($validated, $id),
+                    self::MARKDOWN
+                );
+            } catch (\Exception $e) {
+                Log::error($e->getMessage(), $e->getTrace());
+            }
+        }
 
         if (!empty($files)) {
-            foreach ($files as $file) {
-                (new BotApi($this->botToken))->sendDocument($this->botId, $this->getCurlFile($file));
+            foreach ($this->chatIds as $chatId) {
+                foreach ($files as $file) {
+                    (new BotApi($this->botToken))->sendDocument($chatId, $this->getCurlFile($file));
+                }
             }
         }
     }
