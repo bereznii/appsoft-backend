@@ -34,9 +34,9 @@ class Controller extends BaseController
         ]);
 
         try {
-            $files = !empty($validated['files'])
-                ? $telegram->prepareRequestWithFiles($validated)
-                : null;
+            if (isset($validated['files'])) {
+                $files = $telegram->prepareRequestWithFiles($validated);
+            }
 
             $validated = array_map(fn ($item) => is_string($item) ? trim($item) : $item, $validated);
 
